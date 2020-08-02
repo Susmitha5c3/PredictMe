@@ -1,4 +1,5 @@
 # PredictMe
+[![Susmitha5c3](https://circleci.com/gh/Susmitha5c3/PredictMe-Demo.svg?style=svg)](https://circleci.com/gh/Susmitha5c3/PredictMe-Demo)
 
 I chose a pre-trained, sklearn model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. The datah was initially taken from Kaggle, on the data source site. This project is to operationalize a Python flask app— [app.py](./app.py), that serves out predictions (inference) about housing prices through API calls. This project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
 
@@ -57,12 +58,16 @@ make install
 
     > Output 
     ```bash 
-    Port: 8000
-    {
-    "prediction": [
-        20.35373177134412
-    ]
-    }
+    [2020-05-19 14:16:43,961] INFO in app: JSON payload: 
+    {'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+    [2020-05-19 14:16:43,977] INFO in app: Inference payload DataFrame: 
+    CHAS     RM    TAX  PTRATIO      B  LSTAT
+    0     0  6.575  296.0     15.3  396.9   4.98
+    [2020-05-19 14:16:43,989] INFO in app: Scaling Payload: 
+    CHAS     RM    TAX  PTRATIO      B  LSTAT
+    0     0  6.575  296.0     15.3  396.9   4.98
+    [2020-05-19 14:16:43,993] INFO in app: PREDICTION: [20.35373177134412]
+    172.17.0.1 - - [19/May/2020 14:16:43] "POST /predict HTTP/1.1" 200 -
     ```
     > To save the log output, copy the terminal output into **docker_output.txt** file.
 
@@ -81,4 +86,38 @@ make install
     minikube start
     ```
     > Create a **run_kubernets.sh** file which is same as docker.
-    * Step 1 : 
+    * Step 1 : Create a Docker path variable
+    * Step 2 : Run Docker hub container with kubernets
+    * Step 3 : List all the pods after running
+    * Step 4 : Forward the container to port 80
+
+    > Run the **make_predictions.sh** in another terminal
+    
+    > Output
+    ```bash
+    NAME             READY   STATUS    RESTARTS   AGE
+    udacityproject   1/1     Running   1          88m
+    Forwarding from 127.0.0.1:8000 -> 80
+    Forwarding from [::1]:8000 -> 80
+    Handling connection for 8000
+    ```
+
+    > **Important** Delete the kubenets cluster 
+    ```bash
+    minikube delete
+    ```
+    > For later use you can stop the cluster
+    ```bash
+    minikube stop
+    ```
+
+3. CircleCi Integeration
+    > Create .circleci/config.yml. Copy the contents for [config.yml](./.circleci/config.yml). Push the entire content to the github. 
+
+    > Create [**CircleCi** account](https://circleci.com/signup/) through github
+
+    > Select your organization and start building the repo you have created
+
+    > After successfull building you can see the passed badge
+
+    ![success](./predictMe.png)
